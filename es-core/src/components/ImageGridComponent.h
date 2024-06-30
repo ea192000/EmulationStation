@@ -7,6 +7,7 @@
 #include "components/IList.h"
 #include "resources/TextureResource.h"
 #include "GridTileComponent.h"
+#include "Sound.h"
 
 #define EXTRAITEMS 2
 
@@ -63,6 +64,7 @@ public:
 	ImageSource	getImageSource() { return mImageSource; };
 
 protected:
+	virtual void onScroll(int /*amt*/) override { Sound::getFromTheme(mTheme, "grid", "listscroll")->play(); }
 	virtual void onCursorChanged(const CursorState& state) override;
 
 private:

@@ -25,8 +25,8 @@
 #ifdef WIN32
 #include <Windows.h>
 #endif
-
 #include <FreeImage.h>
+#include "Sound.h"
 
 bool scrape_cmdline = false;
 
@@ -410,7 +410,7 @@ int main(int argc, char* argv[])
 	int ps_time = SDL_GetTicks();
 
 	bool running = true;
-
+	Sound::getFromTheme(SystemData::getRandomSystem()->getTheme(), "system", "systemload")->play();
 	while(running)
 	{
 		SDL_Event event;

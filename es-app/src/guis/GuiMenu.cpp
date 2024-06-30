@@ -224,6 +224,19 @@ void GuiMenu::openUISettings()
 		}
 	});
 
+	// use icons fonts
+	auto use_icon_fonts = std::make_shared<SwitchComponent>(mWindow);
+	use_icon_fonts->setState(Settings::getInstance()->getBool("UseIconFonts"));
+	s->addWithLabel("USE ICON FONTS", use_icon_fonts);
+	s->addSaveFunc([use_icon_fonts] {
+		bool prevState = Settings::getInstance()->getBool("UseIconFonts");
+		Settings::getInstance()->setBool("UseIconFonts", use_icon_fonts->getState());
+		if (prevState != use_icon_fonts->getState())
+		{
+			ViewController::get()->reloadAll(true);
+		}		
+	});
+
 	// screensaver
 	ComponentListRow screensaver_row;
 	screensaver_row.elements.clear();

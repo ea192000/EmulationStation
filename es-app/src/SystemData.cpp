@@ -15,6 +15,7 @@
 #include "utils/StringUtil.h"
 #include "utils/ThreadPool.h"
 #include "Window.h"
+#include "Sound.h"
 
 using namespace Utils;
 
@@ -596,8 +597,8 @@ void SystemData::loadTheme()
 		sysData.insert(std::pair<std::string, std::string>("system.name", getName()));
 		sysData.insert(std::pair<std::string, std::string>("system.theme", getThemeFolder()));
 		sysData.insert(std::pair<std::string, std::string>("system.fullName", getFullName()));
-
 		mTheme->loadFile(sysData, path);
+		
 	} catch(ThemeException& e)
 	{
 		LOG(LogError) << e.what();

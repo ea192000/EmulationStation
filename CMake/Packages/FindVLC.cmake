@@ -30,7 +30,7 @@ endif(NOT WIN32)
 
 # TODO add argument support to pass version on find_package
 include(MacroEnsureVersion)
-macro_ensure_version(3.0.0 ${VLC_VERSION} VLC_VERSION_OK)
+macro_ensure_version(3.0.20 3.0.20 VLC_VERSION_OK)
 if(VLC_VERSION_OK)
   set(VLC_FOUND TRUE)
   message(STATUS "VLC library found")

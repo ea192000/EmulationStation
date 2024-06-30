@@ -92,6 +92,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 				// it's a folder
 				if(cursor->getChildren().size() > 0)
 				{
+					Sound::getFromTheme(getTheme(), getName(), "launch")->play();
 					mCursorStack.push(cursor);
 					populateList(cursor->getChildrenListToDisplay());
 					FileData* cursor = getCursor();
@@ -116,6 +117,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 					systemToView = CollectionSystemManager::get()->getSystemToView(systemToView);
 				}
 				ViewController::get()->goToSystemView(systemToView);
+				Sound::getFromTheme(getTheme(), getName(), "back")->play();
 			}
 
 			return true;
@@ -125,6 +127,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 			{
 				onFocusLost();
 				ViewController::get()->goToNextGameList();
+				Sound::getFromTheme(getTheme(), getName(), "systemscroll")->play();
 				return true;
 			}
 		}else if(config->isMappedLike(getQuickSystemSelectLeftButton(), input))
@@ -133,6 +136,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 			{
 				onFocusLost();
 				ViewController::get()->goToPrevGameList();
+				Sound::getFromTheme(getTheme(), getName(), "systemscroll")->play();
 				return true;
 			}
 		}else if (config->isMappedTo("x", input))
@@ -144,6 +148,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 				if (randomGame)
 				{
 					setCursor(randomGame);
+					Sound::getFromTheme(getTheme(), getName(), "listscroll")->play();
 				}
 				return true;
 			}

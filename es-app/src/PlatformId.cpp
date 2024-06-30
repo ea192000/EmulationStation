@@ -92,7 +92,7 @@ namespace PlatformIds
 		"ti99",
 		"dragon32",
 		"zmachine",
-
+		"gamecom",
 		"ignore", // do not allow scraping for this system
 		"invalid"
 	};

@@ -7,15 +7,15 @@
 TextComponent::TextComponent(Window* window) : GuiComponent(window),
 	mFont(Font::get(FONT_SIZE_MEDIUM)), mUppercase(false), mColor(0x000000FF), mAutoCalcExtent(true, true),
 	mHorizontalAlignment(ALIGN_LEFT), mVerticalAlignment(ALIGN_CENTER), mLineSpacing(1.5f), mBgColor(0),
-	mRenderBackground(false)
+	mRenderBackground(false), mLength(0)
 {
 }
 
 TextComponent::TextComponent(Window* window, const std::string& text, const std::shared_ptr<Font>& font, unsigned int color, Alignment align,
-	Vector3f pos, Vector2f size, unsigned int bgcolor) : GuiComponent(window),
+	Vector3f pos, Vector2f size, unsigned int bgcolor, unsigned int lenght) : GuiComponent(window),
 	mFont(NULL), mUppercase(false), mColor(0x000000FF), mAutoCalcExtent(true, true),
 	mHorizontalAlignment(align), mVerticalAlignment(ALIGN_CENTER), mLineSpacing(1.5f), mBgColor(0),
-	mRenderBackground(false)
+	mRenderBackground(false), mLength(0)
 {
 	setFont(font);
 	setColor(color);
@@ -23,6 +23,7 @@ TextComponent::TextComponent(Window* window, const std::string& text, const std:
 	setText(text);
 	setPosition(pos);
 	setSize(size);
+	setLength(lenght);
 }
 
 void TextComponent::onSizeChanged()
@@ -83,6 +84,12 @@ unsigned char TextComponent::getOpacity() const
 void TextComponent::setText(const std::string& text)
 {
 	mText = text;
+	onTextChanged();
+}
+
+void TextComponent::setLength(unsigned int length)
+{
+	mLength = length;
 	onTextChanged();
 }
 
@@ -161,7 +168,14 @@ void TextComponent::render(const Transform4x4f& parentTrans)
 
 std::string TextComponent::calculateExtent(bool allow_wrapping)
 {
-	std::string text = mUppercase ? Utils::String::toUpper(mText) : mText;
+	std::string text = "";
+	if (mLength > 0) {
+		text = mUppercase ? Utils::String::toUpper(mText.substr(0, mLength)) : mText.substr(0, mLength);
+	}
+	else {
+		text = mUppercase ? Utils::String::toUpper(mText) : mText;
+	}
+	
 	if(mAutoCalcExtent.x())
 	{
 		mSize = mFont->sizeText(text, mLineSpacing);

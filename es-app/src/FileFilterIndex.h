@@ -17,7 +17,14 @@ enum FilterIndexType
 	RATINGS_FILTER,
 	FAVORITES_FILTER,
 	HIDDEN_FILTER,
-	KIDGAME_FILTER
+	KIDGAME_FILTER,
+	FRANCHISE_FILTER,
+	SUBSYSTEM_FILTER,
+	REGION_FILTER,
+	LANGUAGE_FILTER,
+	RATE_FILTER,
+	INPUT_FILTER,
+	ASPECT_FILTER
 };
 
 struct FilterDataDecl
@@ -43,7 +50,22 @@ public:
 	void clearAllFilters();
 	void debugPrintIndexes();
 	bool showFile(FileData* game);
-	bool isFiltered() { return (filterByGenre || filterByPlayers || filterByPubDev || filterByRatings || filterByFavorites || filterByHidden || filterByKidGame); };
+	bool isFiltered() { return (
+		filterByGenre || 
+		filterByPlayers || 
+		filterByPubDev || 
+		filterByRatings || 
+		filterByFavorites || 
+		filterByHidden || 
+		filterByKidGame || 
+		filterByFranchise || 
+		filterBySubsystem || 
+		filterByRegion || 
+		filterByLanguage || 
+		filterByRate || 
+		filterByInput ||
+		filterByAspect
+		);};
 	bool isKeyBeingFilteredBy(std::string key, FilterIndexType type);
 	std::vector<FilterDataDecl>& getFilterDataDecls();
 
@@ -63,6 +85,13 @@ private:
 	void manageFavoritesEntryInIndex(FileData* game, bool remove = false);
 	void manageHiddenEntryInIndex(FileData* game, bool remove = false);
 	void manageKidGameEntryInIndex(FileData* game, bool remove = false);
+	void manageFranchiseEntryInIndex(FileData* game, bool remove = false);
+	void manageSubsystemEntryInIndex(FileData* game, bool remove = false);
+	void manageRegionEntryInIndex(FileData* game, bool remove = false);
+	void manageLanguageEntryInIndex(FileData* game, bool remove = false);
+	void manageRateEntryInIndex(FileData* game, bool remove = false);
+	void manageInputEntryInIndex(FileData* game, bool remove = false);
+	void manageAspectEntryInIndex(FileData* game, bool remove = false);
 
 	void manageIndexEntry(std::map<std::string, int>* index, std::string key, bool remove);
 
@@ -75,6 +104,13 @@ private:
 	bool filterByFavorites;
 	bool filterByHidden;
 	bool filterByKidGame;
+	bool filterByFranchise;
+	bool filterBySubsystem;
+	bool filterByRegion;
+	bool filterByLanguage;
+	bool filterByRate;
+	bool filterByInput;
+	bool filterByAspect;
 
 	std::map<std::string, int> genreIndexAllKeys;
 	std::map<std::string, int> playersIndexAllKeys;
@@ -83,6 +119,13 @@ private:
 	std::map<std::string, int> favoritesIndexAllKeys;
 	std::map<std::string, int> hiddenIndexAllKeys;
 	std::map<std::string, int> kidGameIndexAllKeys;
+	std::map<std::string, int> franchiseIndexAllKeys;
+	std::map<std::string, int> subsystemIndexAllKeys;
+	std::map<std::string, int> regionIndexAllKeys;
+	std::map<std::string, int> languageIndexAllKeys;
+	std::map<std::string, int> rateIndexAllKeys;
+	std::map<std::string, int> inputIndexAllKeys;
+	std::map<std::string, int> aspectIndexAllKeys;
 
 	std::vector<std::string> genreIndexFilteredKeys;
 	std::vector<std::string> playersIndexFilteredKeys;
@@ -91,6 +134,13 @@ private:
 	std::vector<std::string> favoritesIndexFilteredKeys;
 	std::vector<std::string> hiddenIndexFilteredKeys;
 	std::vector<std::string> kidGameIndexFilteredKeys;
+	std::vector<std::string> franchiseIndexFilteredKeys;
+	std::vector<std::string> subsystemIndexFilteredKeys;
+	std::vector<std::string> regionIndexFilteredKeys;
+	std::vector<std::string> languageIndexFilteredKeys;
+	std::vector<std::string> rateIndexFilteredKeys;
+	std::vector<std::string> inputIndexFilteredKeys;
+	std::vector<std::string> aspectIndexFilteredKeys;
 
 	FileData* mRootFolder;
 

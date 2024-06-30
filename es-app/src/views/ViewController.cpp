@@ -434,6 +434,7 @@ bool ViewController::input(InputConfig* config, Input input)
 	if(!(UIModeController::getInstance()->isUIModeKid() && Settings::getInstance()->getBool("DisableKidStartMenu")) && config->isMappedTo("start", input) && input.value != 0)
 	{
 		// open menu
+		Sound::getFromTheme(mSystemListView->getSelected()->getTheme(), Settings::getInstance()->getString("GamelistViewStyle"), "menuOpen")->play();
 		mWindow->pushGui(new GuiMenu(mWindow));
 		return true;
 	}

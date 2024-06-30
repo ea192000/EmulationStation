@@ -44,6 +44,7 @@ MameNames::MameNames()
 	LOG(LogInfo) << "Parsing XML file \"" << xmlpath << "\"...";
 
 	pugi::xml_document doc;
+	pugi::xml_node structure;
 	pugi::xml_parse_result result = doc.load_file(xmlpath.c_str());
 
 	if(!result)
@@ -52,7 +53,8 @@ MameNames::MameNames()
 		return;
 	}
 
-	for(pugi::xml_node gameNode = doc.child("game"); gameNode; gameNode = gameNode.next_sibling("game"))
+	structure = doc.child("gameList");
+	for(pugi::xml_node gameNode = (!structure.empty() ? structure.child("game") : doc.child("game")); gameNode; gameNode = gameNode.next_sibling("game"))
 	{
 		NamePair namePair = { gameNode.child("mamename").text().get(), gameNode.child("realname").text().get() };
 		mNamePairs.push_back(namePair);
@@ -74,7 +76,8 @@ MameNames::MameNames()
 		return;
 	}
 
-	for(pugi::xml_node biosNode = doc.child("bios"); biosNode; biosNode = biosNode.next_sibling("bios"))
+	structure = doc.child("biosList");
+	for(pugi::xml_node biosNode = (!structure.empty() ? structure.child("bios") : doc.child("bios")); biosNode; biosNode = biosNode.next_sibling("bios"))
 	{
 		std::string bios = biosNode.text().get();
 		mMameBioses.push_back(bios);
@@ -96,7 +99,8 @@ MameNames::MameNames()
 		return;
 	}
 
-	for(pugi::xml_node deviceNode = doc.child("device"); deviceNode; deviceNode = deviceNode.next_sibling("device"))
+	structure = doc.child("deviceList");
+	for(pugi::xml_node deviceNode = (!structure.empty() ? structure.child("device") : doc.child("device")); deviceNode; deviceNode = deviceNode.next_sibling("device"))
 	{
 		std::string device = deviceNode.text().get();
 		mMameDevices.push_back(device);

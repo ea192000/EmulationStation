@@ -17,7 +17,7 @@ class TextComponent : public GuiComponent
 public:
 	TextComponent(Window* window);
 	TextComponent(Window* window, const std::string& text, const std::shared_ptr<Font>& font, unsigned int color = 0x000000FF, Alignment align = ALIGN_LEFT,
-		Vector3f pos = Vector3f::Zero(), Vector2f size = Vector2f::Zero(), unsigned int bgcolor = 0x00000000);
+		Vector3f pos = Vector3f::Zero(), Vector2f size = Vector2f::Zero(), unsigned int bgcolor = 0x00000000, unsigned int length = 0);
 
 	void setFont(const std::shared_ptr<Font>& font);
 	void setUppercase(bool uppercase);
@@ -29,6 +29,7 @@ public:
 	void setLineSpacing(float spacing);
 	void setBackgroundColor(unsigned int color);
 	void setRenderBackground(bool render);
+	void setLength(unsigned int length);
 
 	void render(const Transform4x4f& parentTrans) override;
 
@@ -55,6 +56,7 @@ private:
 
 	unsigned int mColor;
 	unsigned int mBgColor;
+	unsigned int mLength;
 	unsigned char mColorOpacity;
 	unsigned char mBgColorOpacity;
 	bool mRenderBackground;

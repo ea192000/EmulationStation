@@ -3,11 +3,11 @@
 #include <SDL_events.h>
 #ifdef WIN32
 #include <codecvt>
+#include <windows.h>
 #else
 #include <unistd.h>
 #endif
 #include <fcntl.h>
-
 #include "Log.h"
 
 int runShutdownCommand()
@@ -36,7 +36,27 @@ int runSystemCommand(const std::string& cmd_utf8)
 	typedef std::codecvt_utf8<wchar_t> convert_type;
 	std::wstring_convert<convert_type, wchar_t> converter;
 	std::wstring wchar_str = converter.from_bytes(cmd_utf8);
-	return _wsystem(wchar_str.c_str());
+
+	// Fix on windows to avoid open terminal
+	STARTUPINFOW si;
+	PROCESS_INFORMATION pi;
+	ZeroMemory(&si, sizeof(si));
+	si.cb = sizeof(si);
+	ZeroMemory(&pi, sizeof(pi));
+
+	if (!CreateProcessW(NULL, const_cast<WCHAR*>(wchar_str.c_str()), NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
+	{
+		return _wsystem(wchar_str.c_str());
+	}
+	DWORD dwExitCode = WaitForSingleObject(pi.hProcess, INFINITE);
+	if ((dwExitCode == WAIT_FAILED) || (dwExitCode == WAIT_OBJECT_0) || (dwExitCode == WAIT_ABANDONED))
+	{
+		GetExitCodeProcess(pi.hProcess, &dwExitCode);
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+		return ENOEXEC;
+	}
+	return 0;
 #else
 	return system(cmd_utf8.c_str());
 #endif

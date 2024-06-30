@@ -504,7 +504,7 @@ namespace Utils
 				return (getHomePath() + &(path[1]));
 
 			// absolute path
-			if(path[0] == '/')
+			if(path[0] == '/' || path[1] == ':')
 				return path;
 
 			// concatenate paths

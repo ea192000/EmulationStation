@@ -17,6 +17,13 @@ namespace FileSorts
 	bool compareDeveloper(const FileData* file1, const FileData* file2);
 	bool comparePublisher(const FileData* file1, const FileData* file2);
 	bool compareSystem(const FileData* file1, const FileData* file2);
+	bool compareFranchise(const FileData* file1, const FileData* file2);
+	bool compareSubsystem(const FileData* file1, const FileData* file2);
+	bool compareRegion(const FileData* file1, const FileData* file2);
+	bool compareLanguage(const FileData* file1, const FileData* file2);
+	bool compareRate(const FileData* file1, const FileData* file2);
+	bool compareInput(const FileData* file1, const FileData* file2);
+	bool compareAspect(const FileData* file1, const FileData* file2);
 
 	void ignoreLeadingArticles(std::string &name1, std::string &name2);
 

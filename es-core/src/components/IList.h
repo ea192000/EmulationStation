@@ -61,6 +61,7 @@ protected:
 	struct Entry mEntry;
 
 	int mCursor;
+	int mCursorPrev;
 	int mViewportTop;
 
 	int mScrollTier;

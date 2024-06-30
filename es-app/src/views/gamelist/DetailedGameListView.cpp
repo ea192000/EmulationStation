@@ -2,6 +2,7 @@
 
 #include "animations/LambdaAnimation.h"
 #include "views/ViewController.h"
+#include "SystemData.h"
 
 DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 	BasicGameListView(window, root),
@@ -9,13 +10,14 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 	mThumbnail(window),
 	mMarquee(window),
 	mImage(window),
-
 	mLblRating(window), mLblReleaseDate(window), mLblDeveloper(window), mLblPublisher(window),
 	mLblGenre(window), mLblPlayers(window), mLblLastPlayed(window), mLblPlayCount(window),
-
+	mLblFranchise(window), mLblSubsystem(window), mLblRegion(window), mLblLanguage(window),
+	mLblRate(window), mLblInput(window), mLblAspect(window),
 	mRating(window), mReleaseDate(window), mDeveloper(window), mPublisher(window),
 	mGenre(window), mPlayers(window), mLastPlayed(window), mPlayCount(window),
-	mName(window)
+	mName(window), mFranchise(window), mSubsystem(window), mRegion(window),
+	mLanguage(window), mRate(window), mInput(window), mAspect(window)
 {
 	//mHeaderImage.setPosition(mSize.x() * 0.25f, 0);
 
@@ -67,9 +69,12 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 	mLblGenre.setText("Genre: ");
 	addChild(&mLblGenre);
 	addChild(&mGenre);
-	mLblPlayers.setText("Players: ");
-	addChild(&mLblPlayers);
-	addChild(&mPlayers);
+	mLblFranchise.setText("Franchise: ");
+	addChild(&mLblFranchise);
+	addChild(&mFranchise);
+	mLblSubsystem.setText("Subsystem: ");
+	addChild(&mLblSubsystem);
+	addChild(&mSubsystem);
 	mLblLastPlayed.setText("Last played: ");
 	addChild(&mLblLastPlayed);
 	mLastPlayed.setDisplayRelative(true);
@@ -77,6 +82,29 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 	mLblPlayCount.setText("Times played: ");
 	addChild(&mLblPlayCount);
 	addChild(&mPlayCount);
+	mLblPlayers.setText("Players: ");
+	addChild(&mLblPlayers);
+	addChild(&mPlayers);
+	mLblRegion.setText("Region: ");
+	addChild(&mLblRegion);
+	mRegion.setLength(Settings::getInstance()->getBool("UseIconFonts") ? 1 : 0);
+	addChild(&mRegion);
+	mLblLanguage.setText("Language: ");
+	addChild(&mLblLanguage);
+	mLanguage.setLength(Settings::getInstance()->getBool("UseIconFonts") ? 1 : 0);
+	addChild(&mLanguage);
+	mLblRate.setText("Age classification: ");
+	addChild(&mLblRate);
+	mRate.setLength(Settings::getInstance()->getBool("UseIconFonts") ? 1 : 0);
+	addChild(&mRate);
+	mLblInput.setText("Input device: ");
+	addChild(&mLblInput);
+	mInput.setLength(Settings::getInstance()->getBool("UseIconFonts") ? 1 : 0);
+	addChild(&mInput);
+	mLblAspect.setText("Aspect ratio: ");
+	addChild(&mLblAspect);
+	mAspect.setLength(Settings::getInstance()->getBool("UseIconFonts") ? 1 : 0);
+	addChild(&mAspect);
 
 	mName.setPosition(mSize.x(), mSize.y());
 	mName.setDefaultZIndex(40);
@@ -113,28 +141,58 @@ void DetailedGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& them
 
 	initMDLabels();
 	std::vector<TextComponent*> labels = getMDLabels();
-	assert(labels.size() == 8);
-	const char* lblElements[8] = {
-		"md_lbl_rating", "md_lbl_releasedate", "md_lbl_developer", "md_lbl_publisher",
-		"md_lbl_genre", "md_lbl_players", "md_lbl_lastplayed", "md_lbl_playcount"
+	assert(labels.size() == 15);
+	const char* lblElements[15] = {
+		"md_lbl_rating",
+		"md_lbl_releasedate",
+		"md_lbl_developer",
+		"md_lbl_publisher",
+		"md_lbl_genre",
+		"md_lbl_franchise",
+		"md_lbl_subsystem",
+		"md_lbl_lastplayed",
+		"md_lbl_playcount",
+		"md_lbl_players",
+		"md_lbl_region",
+		"md_lbl_language",
+		"md_lbl_rate",
+		"md_lbl_input",
+		"md_lbl_aspect"
 	};
 
 	for(unsigned int i = 0; i < labels.size(); i++)
 	{
+		// Send out of screen undefined elements
+		labels[i]->setPosition(mSize.x(), mSize.y());
 		labels[i]->applyTheme(theme, getName(), lblElements[i], ALL);
 	}
 
 
 	initMDValues();
 	std::vector<GuiComponent*> values = getMDValues();
-	assert(values.size() == 8);
-	const char* valElements[8] = {
-		"md_rating", "md_releasedate", "md_developer", "md_publisher",
-		"md_genre", "md_players", "md_lastplayed", "md_playcount"
+	assert(values.size() == 15);
+	const char* valElements[15] = {
+		"md_rating",
+		"md_releasedate",
+		"md_developer",
+		"md_publisher",
+		"md_genre",
+		"md_franchise",
+		"md_subsystem",
+		"md_lastplayed",
+		"md_playcount",
+		"md_players",
+		"md_region",
+		"md_language",
+		"md_rate",
+		"md_input",
+		"md_aspect"
 	};
 
 	for(unsigned int i = 0; i < values.size(); i++)
 	{
+		// Send out of screen undefined elements
+		values[i]->setPosition(mSize.x(), mSize.y());
 		values[i]->applyTheme(theme, getName(), valElements[i], ALL ^ ThemeFlags::TEXT);
 	}
 
@@ -187,9 +245,26 @@ void DetailedGameListView::initMDValues()
 	mDeveloper.setFont(defaultFont);
 	mPublisher.setFont(defaultFont);
 	mGenre.setFont(defaultFont);
-	mPlayers.setFont(defaultFont);
 	mLastPlayed.setFont(defaultFont);
 	mPlayCount.setFont(defaultFont);
+	mFranchise.setFont(defaultFont);
+	mSubsystem.setFont(defaultFont);
+	if (Settings::getInstance()->getBool("UseIconFonts")) {
+		mPlayers.setFont(Font::get(FONT_SIZE_SMALL, FONT_PATH_PLAYERS));
+		mRegion.setFont(Font::get(FONT_SIZE_SMALL, FONT_PATH_REGIONS));
+		mLanguage.setFont(Font::get(FONT_SIZE_SMALL, FONT_PATH_LANGUAGES));
+		mRate.setFont(Font::get(FONT_SIZE_SMALL, FONT_PATH_RATES));
+		mInput.setFont(Font::get(FONT_SIZE_SMALL, FONT_PATH_DEVICES));
+		mAspect.setFont(Font::get(FONT_SIZE_SMALL, FONT_PATH_ASPECTS));
+	}
+	else {
+		mPlayers.setFont(defaultFont);
+		mRegion.setFont(defaultFont);
+		mLanguage.setFont(defaultFont);
+		mRate.setFont(defaultFont);
+		mInput.setFont(defaultFont);
+		mAspect.setFont(defaultFont);
+	}
 
 	float bottom = 0.0f;
 
@@ -234,6 +309,13 @@ void DetailedGameListView::updateInfoPanel()
 		mGenre.setValue(file->metadata.get("genre"));
 		mPlayers.setValue(file->metadata.get("players"));
 		mName.setValue(file->metadata.get("name"));
+		mFranchise.setValue(file->metadata.get("franchise"));
+		mSubsystem.setValue(file->metadata.get("subsystem").empty() ? mRoot->getSystem()->getFullName() : file->metadata.get("subsystem"));
+		mRegion.setValue(file->metadata.get("region"));
+		mLanguage.setValue(file->metadata.get("language"));
+		mRate.setValue(file->metadata.get("rate"));
+		mInput.setValue(file->metadata.get("input"));
+		mAspect.setValue(file->metadata.get("aspect"));
 
 		if(file->getType() == GAME)
 		{
@@ -289,9 +371,16 @@ std::vector<TextComponent*> DetailedGameListView::getMDLabels()
 	ret.push_back(&mLblDeveloper);
 	ret.push_back(&mLblPublisher);
 	ret.push_back(&mLblGenre);
-	ret.push_back(&mLblPlayers);
+	ret.push_back(&mLblFranchise);
+	ret.push_back(&mLblSubsystem);
 	ret.push_back(&mLblLastPlayed);
 	ret.push_back(&mLblPlayCount);
+	ret.push_back(&mLblPlayers);
+	ret.push_back(&mLblRegion);
+	ret.push_back(&mLblLanguage);
+	ret.push_back(&mLblRate);
+	ret.push_back(&mLblInput);
+	ret.push_back(&mLblAspect);
 	return ret;
 }
 
@@ -303,9 +392,16 @@ std::vector<GuiComponent*> DetailedGameListView::getMDValues()
 	ret.push_back(&mDeveloper);
 	ret.push_back(&mPublisher);
 	ret.push_back(&mGenre);
-	ret.push_back(&mPlayers);
+	ret.push_back(&mFranchise);
+	ret.push_back(&mSubsystem);
 	ret.push_back(&mLastPlayed);
 	ret.push_back(&mPlayCount);
+	ret.push_back(&mPlayers);
+	ret.push_back(&mRegion);
+	ret.push_back(&mLanguage);
+	ret.push_back(&mRate);
+	ret.push_back(&mInput);
+	ret.push_back(&mAspect);
 	return ret;
 }
 

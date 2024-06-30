@@ -18,8 +18,14 @@ class TextCache;
 #define FONT_SIZE_MEDIUM ((unsigned int)(0.045f * Math::min((int)Renderer::getScreenHeight(), (int)Renderer::getScreenWidth())))
 #define FONT_SIZE_LARGE ((unsigned int)(0.085f * Math::min((int)Renderer::getScreenHeight(), (int)Renderer::getScreenWidth())))
 
-#define FONT_PATH_LIGHT ":/opensans_hebrew_condensed_light.ttf"
-#define FONT_PATH_REGULAR ":/opensans_hebrew_condensed_regular.ttf"
+#define FONT_PATH_LIGHT ":/fonts/opensans_hebrew_condensed_light.ttf"
+#define FONT_PATH_REGULAR ":/fonts/opensans_hebrew_condensed_regular.ttf"
+#define FONT_PATH_PLAYERS ":/fonts/players.ttf"
+#define FONT_PATH_ASPECTS ":/fonts/aspects.ttf"
+#define FONT_PATH_DEVICES ":/fonts/devices.ttf"
+#define FONT_PATH_LANGUAGES ":/fonts/languages.ttf"
+#define FONT_PATH_RATES ":/fonts/ratings.ttf"
+#define FONT_PATH_REGIONS ":/fonts/regions.ttf"
 
 enum Alignment
 {

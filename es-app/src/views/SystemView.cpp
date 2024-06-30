@@ -9,6 +9,7 @@
 #include "Settings.h"
 #include "SystemData.h"
 #include "Window.h"
+#include "Sound.h"
 
 // buffer values for scrolling velocity (left, stopped, right)
 const int logoBuffersLeft[] = { -5, -2, -1 };
@@ -130,7 +131,6 @@ void SystemView::populate()
 void SystemView::goToSystem(SystemData* system, bool animate)
 {
 	setCursor(system);
-
 	if(!animate)
 		finishAnimation(0);
 }
@@ -153,11 +153,13 @@ bool SystemView::input(InputConfig* config, Input input)
 			if (config->isMappedLike("up", input))
 			{
 				listInput(-1);
+				Sound::getFromTheme(mEntries.at(mCursor).object->getTheme(), Settings::getInstance()->getString("GamelistViewStyle"), "systemscroll")->play();
 				return true;
 			}
 			if (config->isMappedLike("down", input))
 			{
 				listInput(1);
+				Sound::getFromTheme(mEntries.at(mCursor).object->getTheme(), Settings::getInstance()->getString("GamelistViewStyle"), "systemscroll")->play();
 				return true;
 			}
 			break;
@@ -167,11 +169,13 @@ bool SystemView::input(InputConfig* config, Input input)
 			if (config->isMappedLike("left", input))
 			{
 				listInput(-1);
+				Sound::getFromTheme(mEntries.at(mCursor).object->getTheme(), Settings::getInstance()->getString("GamelistViewStyle"), "systemscroll")->play();
 				return true;
 			}
 			if (config->isMappedLike("right", input))
 			{
 				listInput(1);
+				Sound::getFromTheme(mEntries.at(mCursor).object->getTheme(), Settings::getInstance()->getString("GamelistViewStyle"), "systemscroll")->play();
 				return true;
 			}
 			break;
@@ -181,6 +185,7 @@ bool SystemView::input(InputConfig* config, Input input)
 		{
 			stopScrolling();
 			ViewController::get()->goToGameList(getSelected());
+			Sound::getFromTheme(mEntries.at(mCursor).object->getTheme(), Settings::getInstance()->getString("GamelistViewStyle"), "systemselect")->play();
 			return true;
 		}
 		if (config->isMappedTo("x", input))
@@ -188,6 +193,7 @@ bool SystemView::input(InputConfig* config, Input input)
 			// get random system
 			// go to system
 			setCursor(SystemData::getRandomSystem());
+			Sound::getFromTheme(mEntries.at(mCursor).object->getTheme(), Settings::getInstance()->getString("GamelistViewStyle"), "systemscroll")->play();
 			return true;
 		}
 	}else{
@@ -214,7 +220,7 @@ void SystemView::update(int deltaTime)
 	GuiComponent::update(deltaTime);
 }
 
-void SystemView::onCursorChanged(const CursorState& /*state*/)
+void SystemView::onCursorChanged(const CursorState& state)
 {
 	// update help style
 	updateHelpPrompts();
@@ -236,7 +242,10 @@ void SystemView::onCursorChanged(const CursorState& /*state*/)
 		endPos = target - posMax; // loop around the start (max - 1 -> -1)
 
 
-	// animate mSystemInfo's opacity (fade out, wait, fade back in)
+	if (state == CURSOR_SCROLLING && mCursor != mCursorPrev) {
+		Sound::getFromTheme(mEntries.at(mCursor).object->getTheme(), Settings::getInstance()->getString("GamelistViewStyle"), "systemscroll")->play();
+		mCursorPrev = mCursor;
+	}
 
 	cancelAnimation(1);
 	cancelAnimation(2);
@@ -338,7 +347,6 @@ void SystemView::onCursorChanged(const CursorState& /*state*/)
 			this->mExtrasCamOffset = endPos;
 		}, move_carousel ? 500 : 1);
 	}
-
 
 	setAnimation(anim, 0, nullptr, false, 0);
 }

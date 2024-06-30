@@ -36,7 +36,28 @@ namespace FileSorts
 		FileData::SortType(&comparePublisher, false, "publisher, descending"),
 
 		FileData::SortType(&compareSystem, true, "system, ascending"),
-		FileData::SortType(&compareSystem, false, "system, descending")
+		FileData::SortType(&compareSystem, false, "system, descending"),
+
+		FileData::SortType(&compareFranchise, true, "franchise, ascending"),
+		FileData::SortType(&compareFranchise, false, "franchise, descending"),
+
+		FileData::SortType(&compareSubsystem, true, "subsystem, ascending"),
+		FileData::SortType(&compareSubsystem, false, "subsystem, descending"),
+
+		FileData::SortType(&compareRegion, true, "region, ascending"),
+		FileData::SortType(&compareRegion, false, "region, descending"),
+
+		FileData::SortType(&compareLanguage, true, "language, ascending"),
+		FileData::SortType(&compareLanguage, false, "language, descending"),
+
+		FileData::SortType(&compareRate, true, "age classification, ascending"),
+		FileData::SortType(&compareRate, false, "age classification, descending"),
+
+		FileData::SortType(&compareInput, true, "input device, ascending"),
+		FileData::SortType(&compareInput, false, "input device, descending"),
+
+		FileData::SortType(&compareAspect, true, "aspect ratio, ascending"),
+		FileData::SortType(&compareAspect, false, "aspect ratio, descending")
 	};
 
 	const std::vector<FileData::SortType> SortTypes(typesArr, typesArr + sizeof(typesArr)/sizeof(typesArr[0]));
@@ -121,6 +142,56 @@ namespace FileSorts
 		std::string system2 = Utils::String::toUpper(file2->getSystemName());
 		return system1.compare(system2) < 0;
 	}
+
+	bool compareFranchise(const FileData* file1, const FileData* file2)
+	{
+		std::string publisher1 = Utils::String::toUpper(file1->metadata.get("franchise"));
+		std::string publisher2 = Utils::String::toUpper(file2->metadata.get("franchise"));
+		return publisher1.compare(publisher2) < 0;
+	}
+	
+	bool compareSubsystem(const FileData* file1, const FileData* file2)
+	{
+		std::string publisher1 = Utils::String::toUpper(file1->metadata.get("subsystem"));
+		std::string publisher2 = Utils::String::toUpper(file2->metadata.get("subsystem"));
+		return publisher1.compare(publisher2) < 0;
+	}
+
+	bool compareRegion(const FileData* file1, const FileData* file2)
+	{
+		std::string publisher1 = Utils::String::toUpper(file1->metadata.get("region"));
+		std::string publisher2 = Utils::String::toUpper(file2->metadata.get("region"));
+		return publisher1.compare(publisher2) < 0;
+	}
+
+	bool compareLanguage(const FileData* file1, const FileData* file2)
+	{
+		std::string publisher1 = Utils::String::toUpper(file1->metadata.get("language"));
+		std::string publisher2 = Utils::String::toUpper(file2->metadata.get("language"));
+		return publisher1.compare(publisher2) < 0;
+	}
+
+	bool compareRate(const FileData* file1, const FileData* file2)
+	{
+		std::string publisher1 = Utils::String::toUpper(file1->metadata.get("rate"));
+		std::string publisher2 = Utils::String::toUpper(file2->metadata.get("rate"));
+		return publisher1.compare(publisher2) < 0;
+	}
+
+	bool compareInput(const FileData* file1, const FileData* file2)
+	{
+		std::string publisher1 = Utils::String::toUpper(file1->metadata.get("input"));
+		std::string publisher2 = Utils::String::toUpper(file2->metadata.get("input"));
+		return publisher1.compare(publisher2) < 0;
+	}
+
+	bool compareAspect(const FileData* file1, const FileData* file2)
+	{
+		std::string publisher1 = Utils::String::toUpper(file1->metadata.get("aspect"));
+		std::string publisher2 = Utils::String::toUpper(file2->metadata.get("aspect"));
+		return publisher1.compare(publisher2) < 0;
+	}
+
 
 	//If option is enabled, ignore leading articles by temporarily modifying the name prior to sorting
 	//(Artciles are defined within the settings config file)

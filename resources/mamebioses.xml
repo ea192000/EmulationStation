@@ -1,4 +1,5 @@
-<!-- Generated on 2024-02-22, from MAME 0.262 (arcade).dat, fbneo.dat, mame2003-plus.xml -->
+<?xml version="1.0"?>
+<biosList>
 <bios>3dobios</bios>
 <bios>acpsx</bios>
 <bios>airlbios</bios>
@@ -88,3 +89,4 @@
 <bios>triforce</bios>
 <bios>v4bios</bios>
 <bios>ym2608</bios>
+</biosList>
