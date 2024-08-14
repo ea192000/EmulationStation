@@ -93,6 +93,7 @@ namespace PlatformIds
 		"dragon32",
 		"zmachine",
 		"gamecom",
+		"phone",
 		"ignore", // do not allow scraping for this system
 		"invalid"
 	};
