@@ -180,6 +180,7 @@ bool parseArgs(int argc, char* argv[])
 				"--screensize WIDTH HEIGHT      for a canvas smaller than the full resolution,\n"
 				"                               or if rotating into portrait mode\n"
 				"--screenoffset X Y             move the canvas by x,y pixels\n"
+				"--fullscreen-borderless        borderless fullscreen window\n"
 				"--windowed                     not fullscreen, should be used with --resolution\n"
 				"\nGame and settings visibility in ES and behaviour of ES:\n"
 				"--force-disable-filters        force the UI to ignore applied filters on\n"
