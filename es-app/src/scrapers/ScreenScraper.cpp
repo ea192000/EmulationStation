@@ -100,7 +100,8 @@ const std::map<PlatformId, unsigned short> screenscraper_platformid_map{
 	{ TANDY, 144 },
 	{ TI_99, 205 },
 	{ DRAGON32, 91 },
-	{ ZMACHINE, 21 }
+	{ ZMACHINE, 21 },
+	{ FMTOWNS, 253 }
 };
 
 

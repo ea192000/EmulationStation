@@ -92,6 +92,7 @@ namespace PlatformIds
 		"ti99",
 		"dragon32",
 		"zmachine",
+		"fmtowns",
 		"gamecom",
 		"phone",
 		"ignore", // do not allow scraping for this system
