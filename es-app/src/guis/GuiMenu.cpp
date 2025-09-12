@@ -475,6 +475,12 @@ void GuiMenu::openOtherSettings()
 	s->addWithLabel("SHOW HIDDEN FILES", hidden_files);
 	s->addSaveFunc([hidden_files] { Settings::getInstance()->setBool("ShowHiddenFiles", hidden_files->getState()); });
 
+	// Sub Folders
+	auto sub_folders = std::make_shared<SwitchComponent>(mWindow);
+	sub_folders->setState(Settings::getInstance()->getBool("ShowSubFolders"));
+	s->addWithLabel("SHOW SUB-FOLDERS", sub_folders);
+	s->addSaveFunc([sub_folders] { Settings::getInstance()->setBool("ShowSubFolders", sub_folders->getState()); });
+
 #ifdef _OMX_
 	// Video Player - VideoOmxPlayer
 	auto omx_player = std::make_shared<SwitchComponent>(mWindow);

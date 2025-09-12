@@ -53,6 +53,7 @@ void Settings::setDefaults()
 	mBoolMap["BackgroundJoystickInput"] = false;
 	mBoolMap["ParseGamelistOnly"] = false;
 	mBoolMap["ShowHiddenFiles"] = false;
+	mBoolMap["ShowSubFolders"] = true;
 	mBoolMap["DrawFramerate"] = false;
 	mBoolMap["ShowExit"] = true;
 	mBoolMap["ConfirmQuit"] = true;

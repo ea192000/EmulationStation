@@ -95,6 +95,7 @@ void SystemData::populateFolder(FileData* folder)
 	std::string extension;
 	bool isGame;
 	bool showHidden = Settings::getInstance()->getBool("ShowHiddenFiles");
+	bool showSubFolders = Settings::getInstance()->getBool("ShowSubFolders");
 	Utils::FileSystem::stringList dirContent = Utils::FileSystem::getDirContent(folderPath);
 	for(Utils::FileSystem::stringList::const_iterator it = dirContent.cbegin(); it != dirContent.cend(); ++it)
 	{
@@ -125,7 +126,7 @@ void SystemData::populateFolder(FileData* folder)
 		}
 
 		//add directories that also do not match an extension as folders
-		if(!isGame && Utils::FileSystem::isDirectory(filePath))
+		if(!isGame && Utils::FileSystem::isDirectory(filePath) && showSubFolders)
 		{
 			FileData* newFolder = new FileData(FOLDER, filePath, mEnvData, this);
 			populateFolder(newFolder);

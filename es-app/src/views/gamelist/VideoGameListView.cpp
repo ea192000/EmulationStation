@@ -356,7 +356,6 @@ void VideoGameListView::updateInfoPanel()
 		mPlayers.setValue(file->metadata.get("players"));
 		mName.setValue(file->metadata.get("name"));
 		mFranchise.setValue(file->metadata.get("franchise"));
-		mSubsystem.setValue(file->metadata.get("subsystem").empty() ? mRoot->getSystem()->getFullName() : file->metadata.get("subsystem"));
 		mRegion.setValue(file->metadata.get("region"));
 		mLanguage.setValue(file->metadata.get("language"));
 		mRate.setValue(file->metadata.get("rate"));
@@ -365,8 +364,13 @@ void VideoGameListView::updateInfoPanel()
 
 		if(file->getType() == GAME)
 		{
+			mSubsystem.setValue(file->metadata.get("subsystem").empty() ? mRoot->getSystem()->getFullName() : file->metadata.get("subsystem"));
 			mLastPlayed.setValue(file->metadata.get("lastplayed"));
 			mPlayCount.setValue(file->metadata.get("playcount"));
+		}
+		else
+		{
+			mSubsystem.setValue("");
 		}
 
 		fadingOut = false;

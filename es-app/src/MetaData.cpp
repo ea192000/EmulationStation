@@ -44,6 +44,7 @@ const inline std::string blankDate() {
 MetaDataDecl folderDecls[] = {
 	{"name",        MD_STRING,              "",                 false,      "name",                 "enter game name"},
 	{"sortname",    MD_STRING,              "",                 false,      "sortname",             "enter game sort name"},
+	{"franchise",   MD_STRING,              "",                 false,      "franchise",            "enter game franchise"},
 	{"desc",        MD_MULTILINE_STRING,    "",                 false,      "description",          "enter description"},
 	{"image",       MD_PATH,                "",                 false,      "image",                "enter path to image"},
 	{"thumbnail",   MD_PATH,                "",                 false,      "thumbnail",            "enter path to thumbnail"},
@@ -54,7 +55,13 @@ MetaDataDecl folderDecls[] = {
 	{"developer",   MD_STRING,              "",                 false,      "developer",            "enter game developer"},
 	{"publisher",   MD_STRING,              "",                 false,      "publisher",            "enter game publisher"},
 	{"genre",       MD_STRING,              "",                 false,      "genre",                "enter game genre"},
-	{"players",     MD_INT,                 "",                 false,      "players",              "enter number of players"}
+	{"subsystem",   MD_STRING,              "",                 false,      "subsystem",            "enter game subsystem"},
+	{"players",     MD_INT,                 "",                 false,      "players",              "enter number of players"},
+	{"region",      MD_STRING,              "",                 false,      "region",               "enter game region" },
+	{"language",    MD_STRING,              "",                 false,      "language",             "enter game language"},
+	{"rate",        MD_STRING,              "",                 false,      "age rating",           "enter game age rating"},
+	{"input",       MD_STRING,              "",                 false,      "input type",           "enter game input type"},
+	{"aspect",      MD_STRING,              "",                 false,      "aspect ratio",         "enter game aspect ratio"}
 };
 const std::vector<MetaDataDecl> folderMDD(folderDecls, folderDecls + sizeof(folderDecls) / sizeof(folderDecls[0]));
 

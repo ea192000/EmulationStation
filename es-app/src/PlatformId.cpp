@@ -95,6 +95,13 @@ namespace PlatformIds
 		"fmtowns",
 		"gamecom",
 		"phone",
+		"odyssey",
+		"scv",
+		"cv",
+		"vcs",
+		"cdi",
+		"vmu",
+		"fantasy",
 		"ignore", // do not allow scraping for this system
 		"invalid"
 	};
