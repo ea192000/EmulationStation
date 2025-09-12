@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.5...4.0)
 # Note: Visual Studio 2022 generator requires CMake 3.21 or greater.
 
 option(GLES "Set to ON if targeting Embedded OpenGL" ${GLES})

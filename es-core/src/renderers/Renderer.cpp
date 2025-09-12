@@ -74,10 +74,10 @@ namespace Renderer
 		}
 
 		initialCursorState = (SDL_ShowCursor(0) != 0);
-		
+
 		int displayIndex = Settings::getInstance()->getInt("MonitorID");
 
-		if (displayIndex < 0 || displayIndex >= SDL_GetNumVideoDisplays()) {
+		if(displayIndex < 0 || displayIndex >= SDL_GetNumVideoDisplays()){
 			displayIndex = 0;
 		}
 
@@ -95,7 +95,7 @@ namespace Renderer
 
 		const unsigned int windowFlags = (Settings::getInstance()->getBool("Windowed") ? 0 : (Settings::getInstance()->getBool("FullscreenBorderless") ? SDL_WINDOW_BORDERLESS : SDL_WINDOW_FULLSCREEN)) | getWindowFlags();
 
-		if ((sdlWindow = SDL_CreateWindow("EmulationStation", SDL_WINDOWPOS_UNDEFINED_DISPLAY(displayIndex), SDL_WINDOWPOS_UNDEFINED_DISPLAY(displayIndex), windowWidth, windowHeight, windowFlags)) == nullptr)
+		if((sdlWindow = SDL_CreateWindow("EmulationStation", SDL_WINDOWPOS_UNDEFINED_DISPLAY(displayIndex), SDL_WINDOWPOS_UNDEFINED_DISPLAY(displayIndex), windowWidth, windowHeight, windowFlags)) == nullptr)
 		{
 			LOG(LogError) << "Error creating SDL window!\n\t" << SDL_GetError();
 			return false;

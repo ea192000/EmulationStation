@@ -52,7 +52,7 @@ bool parseArgs(int argc, char* argv[])
 
 	for(int i = 1; i < argc; i++)
 	{
-		if (strcmp(argv[i], "--monitor") == 0)
+		if(strcmp(argv[i], "--monitor") == 0)
 		{
 			if (i >= argc - 1)
 			{
@@ -63,8 +63,7 @@ bool parseArgs(int argc, char* argv[])
 			int monitor = atoi(argv[i + 1]);
 			i++; // skip the argument value
 			Settings::getInstance()->setInt("MonitorID", monitor);
-		}
-		else if (strcmp(argv[i], "--resolution") == 0)
+		}else if(strcmp(argv[i], "--resolution") == 0)
 		{
 			if(i >= argc - 2)
 			{
