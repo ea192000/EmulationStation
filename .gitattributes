@@ -1,0 +1,58 @@
+* text=auto
+
+# Source files
+*.c text eol=lf
+*.cc text eol=lf
+*.cpp text eol=lf
+*.cxx text eol=lf
+*.h text eol=lf
+*.hh text eol=lf
+*.hpp text eol=lf
+*.hxx text eol=lf
+*.inl text eol=lf
+
+# Build and config files
+*.cmake text eol=lf
+CMakeLists.txt text eol=lf
+Makefile text eol=lf
+*.mk text eol=lf
+*.props text eol=lf
+*.targets text eol=lf
+*.vcxproj text eol=lf
+*.filters text eol=lf
+*.sln text eol=crlf
+*.sh text eol=lf
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Documentation and text
+*.md text eol=lf
+*.txt text eol=lf
+*.adoc text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.xml text eol=lf
+*.svg text eol=lf
+*.rc text eol=crlf
+
+# Treat common binary assets as binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.bmp binary
+*.ico binary
+*.ttf binary
+*.otf binary
+*.wav binary
+*.mp3 binary
+*.ogg binary
+*.mp4 binary
+*.avi binary
+*.zip binary
+*.7z binary
+*.dll binary
+*.lib binary
+*.exe binary
