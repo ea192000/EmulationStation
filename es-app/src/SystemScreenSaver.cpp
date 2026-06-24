@@ -85,9 +85,6 @@ bool SystemScreenSaver::inputDuringScreensaver(InputConfig* config, Input input)
 		bool is_select_game_input =  config->isMappedTo("a", input);
 		bool use_gamelistmedia = screensaver_type == "random video" || !Settings::getInstance()->getBool("SlideshowScreenSaverCustomMediaSource");
 
-		// catch any valid screensaver or invalid inputs here to prevent screensaver from stopping
-		input_consumed = input_consumed || (config->getMappedTo(input).size() == 0);
-
 		if (input.value != 0)
 		{
 			if (is_next_input)
@@ -95,7 +92,7 @@ bool SystemScreenSaver::inputDuringScreensaver(InputConfig* config, Input input)
 				changeMediaItem();
 				input_consumed = true;
 			}
-		    else if (use_gamelistmedia) 
+			else if (use_gamelistmedia)
 			{
 				if (is_previous_input && mPreviousGame)
 				{
