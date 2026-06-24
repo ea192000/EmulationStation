@@ -77,7 +77,7 @@ for dat in sys.argv[1:]:
             games[name] = desc
 
 print(f"Found {len(games)} games, {len(sorted(set(bioses)))} BIOSes and {len(sorted(set(devices)))} devices")
-ident_info = f"<!-- Generated on {datetime.now(timezone.utc).strftime('%F')}, from {', '.join(files)} -->"
+ident_info = f"<!-- Generated on {datetime.now(timezone.utc).strftime('%F')},from {', '.join(f'"{w}"' for w in files)} -->"
 
 if len(games) > 0:
     with open('mamenames.xml', 'w') as f:
