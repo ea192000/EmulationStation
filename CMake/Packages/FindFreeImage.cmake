@@ -47,3 +47,20 @@ find_library(FreeImage_LIBRARY_DBG NAMES ${FreeImage_LIBRARY_NAMES_DBG} HINTS ${
 make_library_set(FreeImage_LIBRARY)
 
 findpkg_finish(FreeImage)
+
+# On Windows with a static vcpkg build, FreeImage needs its transitive dependencies linked explicitly
+if(FreeImage_FOUND AND WIN32 AND DEFINED VCPKG_TARGET_TRIPLET)
+  set(_FI_VCPKG_LIB_DIR "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
+  foreach(_lib tiff openjp2 Imath-3_1 jpeg libpng16 zlib bz2 lzma jasper
+               libwebp libwebpdemux libwebpmux libsharpyuv lcms2 raw_r
+               OpenEXR-3_2 OpenEXRCore-3_2 Iex-3_2 IlmThread-3_2
+               jpegxr jxrglue deflatestatic turbojpeg brotlidec brotlicommon)
+    set(_lib_path "${_FI_VCPKG_LIB_DIR}/${_lib}.lib")
+    if(EXISTS "${_lib_path}")
+      list(APPEND FreeImage_LIBRARIES "${_lib_path}")
+    endif()
+  endforeach()
+  unset(_FI_VCPKG_LIB_DIR)
+  unset(_lib_path)
+  unset(_lib)
+endif()
