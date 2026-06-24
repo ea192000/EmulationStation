@@ -4,14 +4,13 @@ Programming
 UI Art & Design
 	Nils Bonenberger
 
-
 Libraries
 =========
 
-PugiXML
+pugixml
 	http://pugixml.org/
 
-SDL 2
+SDL2
 	http://www.libsdl.org/
 
 FreeImage
@@ -22,6 +21,12 @@ FreeType
 
 cURL
 	http://curl.haxx.se/
+
+libVLC
+	https://www.videolan.org/vlc/libvlc.html
+
+RapidJSON
+	http://rapidjson.org/
 
 nanosvg
 	https://github.com/memononen/nanosvg

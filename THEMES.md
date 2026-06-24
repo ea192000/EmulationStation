@@ -69,7 +69,12 @@ How it works
 
 Everything must be inside a `<theme>` tag.
 
-**The `<formatVersion>` tag *must* be specified**.  This is the version of the theming system the theme was designed for.  The current version is 3.
+**The `<formatVersion>` tag *must* be specified**.  This is the version of the theming system the theme was designed for.
+
+* Minimum supported version: `3`
+* Current format version: `6`
+
+Using the current version is recommended for all new themes.
 
 
 
@@ -164,7 +169,11 @@ Parenting of elements can not be used when using a resolution other than 1 1.
 
 ### The `<include>` tag
 
-You can include theme files within theme files, similar to `#include` in C (though the internal mechanism is different, the effect is the same).  Example:
+You can include theme files within theme files, similar to `#include` in C (though the internal mechanism is different, the effect is the same).
+
+Included files are parsed as full theme files, so they may contain their own `<variables>`, `<include>`, `<view>` and `<feature>` tags.
+
+Example:
 
 `~/.emulationstation/all_themes.xml`:
 ```xml
@@ -311,6 +320,27 @@ Which is equivalent to:
 
 Just remember, *this only works if the elements have the same type!*
 
+### The `<feature>` tag
+
+Themes can optionally wrap view definitions inside feature blocks:
+
+```xml
+<feature supported="video">
+	<view name="video">
+		...
+	</view>
+</feature>
+```
+
+Only supported features are parsed.  Current supported feature names are:
+
+* `video`
+* `carousel`
+* `z-index`
+* `visible`
+
+Unsupported feature names are ignored.
+
 ### Element rendering order with z-index
 
 You can now change the order in which elements are rendered by setting `zIndex` values.  Default values correspond to the default rendering order while allowing elements to easily be shifted without having to set `zIndex` values for every element.  Elements will be rendered in order from smallest z-index to largest.
@@ -359,37 +389,57 @@ You can now change the order in which elements are rendered by setting `zIndex` 
 
 ### Theme variables
 
-Theme variables can be used to simplify theme construction.  There are 2 types of variables available.
+Theme variables can be used to simplify theme construction. There are 2 types of variables available:
+
 * System Variables
 * Theme Defined Variables
 
+Variables must be declared inside a `<variables>` block placed directly under the root `<theme>` tag.
+
 #### System Variables
 
-System variables are system specific and are derived from the values in es_systems.cfg.
+System variables are system specific and are derived from the values in `es_systems.cfg`.
+
 * `system.name`
 * `system.fullName`
 * `system.theme`
 
 #### Theme Defined Variables
-Variables can also be defined in the theme.
-```
-<variables>
-	<themeColor>8b0000</themeColor>
-</variables>
+
+Variables can also be defined in the theme:
+
+```xml
+<theme>
+	<formatVersion>6</formatVersion>
+	<variables>
+		<themeColor>8b0000</themeColor>
+		<favoriteIconVisible>true</favoriteIconVisible>
+	</variables>
+</theme>
 ```
 
 #### Usage in themes
-Variables can be used to specify the value of a theme property:
-```
+
+Variables can be used to specify the full value of a theme property:
+
+```xml
 <color>${themeColor}</color>
 ```
 
-or to specify only a portion of the value of a theme property:
+or only a portion of a value:
 
-```
-<color>${themeColor}c0</color>
+```xml
+<color>${themeColor}C0</color>
 <path>./art/logo/${system.theme}.svg</path>
-````
+```
+
+Theme variables are also available to code that reads theme-level options directly.  For example, the gamelist favorite indicator is enabled with:
+
+```xml
+<variables>
+	<favoriteIconVisible>true</favoriteIconVisible>
+</variables>
+```
 
 Reference
 =========
@@ -402,11 +452,15 @@ Reference
 * `image name="background"` - ALL
 	- This is a background image that exists for convenience. It goes from (0, 0) to (1, 1).
 * `text name="logoText"` - ALL
-	- Displays the name of the system.  Only present if no "logo" image is specified.  Displayed at the top of the screen, centered by default.
+	- Displays the name of the system.  Only present if no `logo` image is specified.  Displayed at the top of the screen, centered by default.
 * `image name="logo"` - ALL
 	- A header image.  If a non-empty `path` is specified, `text name="logoText"` will be hidden and this image will be, by default, displayed roughly in its place.
 * `textlist name="gamelist"` - ALL
-	- The gamelist.  `primaryColor` is for games, `secondaryColor` is for folders.  Centered by default.
+	- The gamelist. `primaryColor` is for games, `secondaryColor` is for folders and placeholder entries. Favorite icons can also be enabled here via theme variables and `favoriteIcon*` properties.
+* `sound name="menuOpen"`
+* `sound name="launch"`
+* `sound name="back"`
+	- Optional sounds used by the basic gamelist view.
 
 ---
 
@@ -437,27 +491,45 @@ Reference
 		* All values will follow to the right of their labels if a position isn't specified.
 
 		* `image name="md_image"` - POSITION | SIZE | Z_INDEX
-			- Path is the "image" metadata for the currently selected game.
+			- Path is the `image` metadata for the currently selected game.
+		* `image name="md_thumbnail"` - POSITION | SIZE | Z_INDEX
+			- Path is the `thumbnail` metadata for the currently selected game.
+		* `image name="md_marquee"` - POSITION | SIZE | Z_INDEX
+			- Path is the `marquee` metadata for the currently selected game.
 		* `rating name="md_rating"` - ALL
-			- The "rating" metadata.
+			- The `rating` metadata.
 		* `datetime name="md_releasedate"` - ALL
-			- The "releasedate" metadata.
+			- The `releasedate` metadata.
 		* `text name="md_developer"` - ALL
-			- The "developer" metadata.
+			- The `developer` metadata.
 		* `text name="md_publisher"` - ALL
-			- The "publisher" metadata.
+			- The `publisher` metadata.
 		* `text name="md_genre"` - ALL
-			- The "genre" metadata.
+			- The `genre` metadata.
+		* `text name="md_franchise"` - ALL
+			- The `franchise` metadata.
+		* `text name="md_subsystem"` - ALL
+			- The `subsystem` metadata.
 		* `text name="md_players"` - ALL
-			- The "players" metadata (number of players the game supports).
+			- The `players` metadata (number of players the game supports).
+		* `text name="md_region"` - ALL
+			- The `region` metadata.
+		* `text name="md_language"` - ALL
+			- The `language` metadata.
+		* `text name="md_rate"` - ALL
+			- The `rate` metadata.
+		* `text name="md_input"` - ALL
+			- The `input` metadata.
+		* `text name="md_aspect"` - ALL
+			- The `aspect` metadata.
 		* `datetime name="md_lastplayed"` - ALL
-			- The "lastplayed" metadata.  Displayed as a string representing the time relative to "now" (e.g. "3 hours ago").
+			- The `lastplayed` metadata. Displayed as a string representing the time relative to `now` when `displayRelative` is enabled.
 		* `text name="md_playcount"` - ALL
-			- The "playcount" metadata (number of times the game has been played).
+			- The `playcount` metadata (number of times the game has been played).
 		* `text name="md_description"` - POSITION | SIZE | FONT_PATH | FONT_SIZE | COLOR | Z_INDEX
-			- Text is the "desc" metadata.  If no `pos`/`size` is specified, will move and resize to fit under the lowest label and reach to the bottom of the screen.
+			- Text is the `desc` metadata. If no `pos`/`size` is specified, it will move and resize to fit under the lowest label and reach to the bottom of the screen.
 		* `text name="md_name"` - ALL
-			- The "name" metadata (the game name). Unlike the others metadata fields, the name is positioned offscreen by default
+			- The `name` metadata (the game name). Unlike the other metadata fields, the name is positioned offscreen by default.
 
 #### video
 * `helpsystem name="help"` - ALL
@@ -478,39 +550,62 @@ Reference
 		* `text name="md_lbl_developer"` - ALL
 		* `text name="md_lbl_publisher"` - ALL
 		* `text name="md_lbl_genre"` - ALL
-		* `text name="md_lbl_players"` - ALL
+		* `text name="md_lbl_franchise"` - ALL
+		* `text name="md_lbl_subsystem"` - ALL
 		* `text name="md_lbl_lastplayed"` - ALL
 		* `text name="md_lbl_playcount"` - ALL
+		* `text name="md_lbl_players"` - ALL
+		* `text name="md_lbl_region"` - ALL
+		* `text name="md_lbl_language"` - ALL
+		* `text name="md_lbl_rate"` - ALL
+		* `text name="md_lbl_input"` - ALL
+		* `text name="md_lbl_aspect"` - ALL
 
 	* Values
 		* All values will follow to the right of their labels if a position isn't specified.
 
 		* `image name="md_image"` - POSITION | SIZE | Z_INDEX
-			- Path is the "image" metadata for the currently selected game.
+			- Path is the `image` metadata for the currently selected game.
+		* `image name="md_thumbnail"` - POSITION | SIZE | Z_INDEX
+			- Path is the `thumbnail` metadata for the currently selected game.
 		* `image name="md_marquee"` - POSITION | SIZE | Z_INDEX
-			- Path is the "marquee" metadata for the currently selected game.
+			- Path is the `marquee` metadata for the currently selected game.
 		* `video name="md_video"` - POSITION | SIZE | Z_INDEX
-			- Path is the "video" metadata for the currently selected game.
+			- Path is the `video` metadata for the currently selected game.
 		* `rating name="md_rating"` - ALL
-			- The "rating" metadata.
+			- The `rating` metadata.
 		* `datetime name="md_releasedate"` - ALL
-			- The "releasedate" metadata.
+			- The `releasedate` metadata.
 		* `text name="md_developer"` - ALL
-			- The "developer" metadata.
+			- The `developer` metadata.
 		* `text name="md_publisher"` - ALL
-			- The "publisher" metadata.
+			- The `publisher` metadata.
 		* `text name="md_genre"` - ALL
-			- The "genre" metadata.
+			- The `genre` metadata.
+		* `text name="md_franchise"` - ALL
+			- The `franchise` metadata.
+		* `text name="md_subsystem"` - ALL
+			- The `subsystem` metadata.
 		* `text name="md_players"` - ALL
-			- The "players" metadata (number of players the game supports).
+			- The `players` metadata (number of players the game supports).
+		* `text name="md_region"` - ALL
+			- The `region` metadata.
+		* `text name="md_language"` - ALL
+			- The `language` metadata.
+		* `text name="md_rate"` - ALL
+			- The `rate` metadata.
+		* `text name="md_input"` - ALL
+			- The `input` metadata.
+		* `text name="md_aspect"` - ALL
+			- The `aspect` metadata.
 		* `datetime name="md_lastplayed"` - ALL
-			- The "lastplayed" metadata.  Displayed as a string representing the time relative to "now" (e.g. "3 hours ago").
+			- The `lastplayed` metadata. Displayed as a string representing the time relative to `now` when `displayRelative` is enabled.
 		* `text name="md_playcount"` - ALL
-			- The "playcount" metadata (number of times the game has been played).
+			- The `playcount` metadata (number of times the game has been played).
 		* `text name="md_description"` - POSITION | SIZE | FONT_PATH | FONT_SIZE | COLOR | Z_INDEX
-			- Text is the "desc" metadata.  If no `pos`/`size` is specified, will move and resize to fit under the lowest label and reach to the bottom of the screen.
+			- Text is the `desc` metadata. If no `pos`/`size` is specified, it will move and resize to fit under the lowest label and reach to the bottom of the screen.
 		* `text name="md_name"` - ALL
-			- The "name" metadata (the game name). Unlike the others metadata fields, the name is positioned offscreen by default
+			- The `name` metadata (the game name). Unlike the other metadata fields, the name is positioned offscreen by default.
 
 ---
 
@@ -537,48 +632,72 @@ Reference
 		* `text name="md_lbl_developer"` - ALL
 		* `text name="md_lbl_publisher"` - ALL
 		* `text name="md_lbl_genre"` - ALL
-		* `text name="md_lbl_players"` - ALL
+		* `text name="md_lbl_franchise"` - ALL
+		* `text name="md_lbl_subsystem"` - ALL
 		* `text name="md_lbl_lastplayed"` - ALL
 		* `text name="md_lbl_playcount"` - ALL
+		* `text name="md_lbl_players"` - ALL
+		* `text name="md_lbl_region"` - ALL
+		* `text name="md_lbl_language"` - ALL
+		* `text name="md_lbl_rate"` - ALL
+		* `text name="md_lbl_input"` - ALL
+		* `text name="md_lbl_aspect"` - ALL
 
 	* Values
 		* All values will follow to the right of their labels if a position isn't specified.
 
 		* `rating name="md_rating"` - ALL
-			- The "rating" metadata.
+			- The `rating` metadata.
 		* `datetime name="md_releasedate"` - ALL
-			- The "releasedate" metadata.
+			- The `releasedate` metadata.
 		* `text name="md_developer"` - ALL
-			- The "developer" metadata.
+			- The `developer` metadata.
 		* `text name="md_publisher"` - ALL
-			- The "publisher" metadata.
+			- The `publisher` metadata.
 		* `text name="md_genre"` - ALL
-			- The "genre" metadata.
+			- The `genre` metadata.
+		* `text name="md_franchise"` - ALL
+			- The `franchise` metadata.
+		* `text name="md_subsystem"` - ALL
+			- The `subsystem` metadata.
 		* `text name="md_players"` - ALL
-			- The "players" metadata (number of players the game supports).
+			- The `players` metadata (number of players the game supports).
+		* `text name="md_region"` - ALL
+			- The `region` metadata.
+		* `text name="md_language"` - ALL
+			- The `language` metadata.
+		* `text name="md_rate"` - ALL
+			- The `rate` metadata.
+		* `text name="md_input"` - ALL
+			- The `input` metadata.
+		* `text name="md_aspect"` - ALL
+			- The `aspect` metadata.
 		* `datetime name="md_lastplayed"` - ALL
-			- The "lastplayed" metadata.  Displayed as a string representing the time relative to "now" (e.g. "3 hours ago").
+			- The `lastplayed` metadata. Displayed as a string representing the time relative to `now` when `displayRelative` is enabled.
 		* `text name="md_playcount"` - ALL
-			- The "playcount" metadata (number of times the game has been played).
+			- The `playcount` metadata (number of times the game has been played).
 		* `text name="md_description"` - POSITION | SIZE | FONT_PATH | FONT_SIZE | COLOR | Z_INDEX
-			- Text is the "desc" metadata.  If no `pos`/`size` is specified, will move and resize to fit under the lowest label and reach to the bottom of the screen.
+			- Text is the `desc` metadata. If no `pos`/`size` is specified, it will move and resize to fit under the lowest label and reach to the bottom of the screen.
 		* `text name="md_name"` - ALL
-			- The "name" metadata (the game name). Unlike the others metadata fields, the name is positioned offscreen by default
+			- The `name` metadata (the game name). Unlike the other metadata fields, the name is positioned offscreen by default.
 
 ---
 
 #### system
 * `helpsystem name="help"` - ALL
 	- The help system style for this view.
-* `carousel name="systemcarousel"` -ALL
-	- The system logo carousel
+* `carousel name="systemcarousel"` - ALL
+	- The system logo carousel.
 * `image name="logo"` - PATH | COLOR
-	- A logo image, to be displayed in the system logo carousel.
+	- A logo image, displayed in the system carousel.
 * `text name="logoText"` - FONT_PATH | COLOR | FORCE_UPPERCASE | LINE_SPACING | TEXT
-	- A logo text, to be displayed system name in the system logo carousel when no logo is available.
+	- A text fallback displayed when no logo image is available.
 * `text name="systemInfo"` - ALL
 	- Displays details of the system currently selected in the carousel.
-* You can use extra elements (elements with `extra="true"`) to add your own backgrounds, etc.  They will be displayed behind the carousel, and scroll relative to the carousel.
+* `sound name="systemscroll"`
+* `sound name="systemselect"`
+	- Optional sounds used by the system view.
+* You can use extra elements (elements with `extra="true"`) to add your own backgrounds, etc. They are displayed behind the carousel and scroll relative to it.
 
 
 ## Types of properties:
@@ -587,7 +706,7 @@ Reference
 * RESOLUTION_PAIR - two decimals, using pixels in the range [0..resolution], delimited by a space.  For example, `320 640`.  Most commonly used for position (x and y coordinates) and size (width and height).
 * RESOLUTION_FLOAT - a decimal, using pixels in the range [0..resolution].  Most commonly used for font size.
 * NORMALIZED_PAIR - two decimals, using percentage in the range [0..1], delimited by a space.  For example, `0.25 0.5`.  Most commonly used for origin (x and y coordinates).
-* PATH - a path.  If the first character is a `~`, it will be expanded into the environment variable for the home path (`$HOME` for Linux or `%HOMEPATH%` for Windows).  If the first character is a `.`, it will be expanded to the theme file's directory, allowing you to specify resources relative to the theme file, like so: `./../general_art/myfont.ttf`.
+* PATH - a path.  If the first character is a `~`, it will be expanded into the environment variable for the home path (`$HOME` for Linux or `%HOMEPATH%` for Windows).  If the first character is a `.`, it will be expanded to the theme file's directory, allowing you to specify resources relative to the theme file, like so: `./../general_art/myfont.ttf`.  Paths beginning with `:/` are treated as internal EmulationStation resources and are not resolved relative to the theme file.
 * STRING - a string of text.
 * COLOR - a hexidecimal RGB or RGBA color (6 or 8 digits).  If 6 digits, will assume the alpha channel is `FF` (not transparent).
 * FLOAT - a decimal.
@@ -654,7 +773,9 @@ Can be created as an extra.
 * `scrollLoop` - type: BOOLEAN.
     - `false` by default, when `true` the grid will seamlessly loop around when scrolling reaches the end of the list.  Only works when `centerSelection` is `true`.
 * `animate` - type : BOOLEAN.
-    - `true` by default, when  `false` the grid scrolling will not be animated.
+    - `true` by default, when `false` the grid scrolling will not be animated.
+* `scrollSound` - type: PATH.
+    - Sound that is played when the grid scrolls.
 * `zIndex` - type: FLOAT.
     - z-index value for component.  Components will be rendered in order of z-index value from low to high.
 
@@ -767,6 +888,10 @@ Can be created as an extra.
 	- Horizontal offset for text from the alignment point.  If `alignment` is "left", offsets the text to the right.  If `alignment` is "right", offsets text to the left.  No effect if `alignment` is "center".  Given as a percentage of the element's parent's width (same unit as `size`'s X value).
 * `forceUppercase` - type: BOOLEAN.  Draw text in uppercase.
 * `lineSpacing` - type: FLOAT.  Controls the space between lines (as a multiple of font height).  Default is 1.5.
+* `favoriteIconPath` - type: PATH.
+	- Path to the icon drawn for favorite games in supported gamelist views.  Defaults to the built-in resource `:/heart_filled.svg`.
+* `favoriteIconColor` - type: COLOR.
+	- Tint color applied to the favorite icon.  Default is `FFFFFFFF`.
 * `zIndex` - type: FLOAT.
 	- z-index value for component.  Components will be rendered in order of z-index value from low to high.
 
@@ -873,6 +998,10 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 * `color` - type: COLOR.
 	- Controls the color of the carousel background.
 	- Default is FFFFFFD8
+* `colorEnd` - type: COLOR.
+	- End color used when rendering a carousel background gradient.
+* `gradientType` - type: STRING.
+	- Gradient direction used by the carousel background.
 * `logoSize` - type: NORMALIZED_PAIR.  Default is "0.25 0.155"
 * `logoScale` - type: FLOAT.
 	- Selected logo is increased in size by this scale
@@ -892,6 +1021,8 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 * `maxLogoCount` - type: FLOAT.
 	- Sets the number of logos to display in the carousel.
 	- Default is 3
+* `scrollSound` - type: PATH.
+	- Sound that is played when the carousel scrolls.
 * `zIndex` - type: FLOAT.
 	- z-index value for component.  Components will be rendered in order of z-index value from low to high.  
 

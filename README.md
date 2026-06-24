@@ -1,7 +1,7 @@
 EmulationStation
 ================
 
-This is a fork of EmulationStation for RetroPie.
+This repository is a maintained fork of EmulationStation.
 EmulationStation is a cross-platform graphical front-end for emulators with controller navigation.
 
 Building
@@ -34,13 +34,13 @@ sudo dnf install SDL2-devel freeimage-devel freetype-devel curl-devel \
 **Note**: this repository uses a git submodule - to checkout the source and all submodules, use
 
 ```bash
-git clone --recursive https://github.com/RetroPie/EmulationStation.git
+git clone --recursive https://github.com/ea192000/EmulationStation.git
 ```
 
 or
 
 ```bash
-git clone https://github.com/RetroPie/EmulationStation.git
+git clone https://github.com/ea192000/EmulationStation.git
 cd EmulationStation
 git submodule update --init
 ```
@@ -77,20 +77,39 @@ cmake -DCMAKE_BUILD_TYPE=Debug .
 Building on Windows
 -------------------
 
-* Install [Visual Studio 2022](https://visualstudio.microsoft.com/vs/community/). At a minimum, install the "Desktop development with C++" workload with the default list of optional items.
+The Windows build uses Visual Studio, CMake, [vcpkg](https://vcpkg.io/en/) and NuGet.
 
-* Install the latest version of [CMake](https://cmake.org/download/) (e.g., [cmake-3.27.1-windows-x86_64.msi](https://github.com/Kitware/CMake/releases/download/v3.27.1/cmake-3.27.1-windows-x86_64.msi)). CMake is used for generating the Visual Studio project.
+These instructions were written to be followed from scratch by someone who has never built the project before.
 
-* Use git to clone [vcpkg](https://vcpkg.io/en/), then run the bootstrap script as shown below to build vcpkg . This is a C/C++ dependency manager from Microsoft.
+### 1. Install prerequisites
+
+* Install [Visual Studio 2022](https://visualstudio.microsoft.com/vs/community/).
+  At a minimum, install the **Desktop development with C++** workload.
+
+* Install [CMake](https://cmake.org/download/).
+
+* Download [nuget.exe](https://dist.nuget.org/win-x86-commandline/latest/nuget.exe) and place it in a folder that is in your `PATH`.
+
+### 2. Install vcpkg
+
+Use git to clone [vcpkg](https://github.com/microsoft/vcpkg), then bootstrap it:
 
 ```batchfile
-C:\src>git clone https://github.com/Microsoft/vcpkg.git
-C:\src>.\vcpkg\bootstrap-vcpkg.bat
+C:\src>git clone https://github.com/microsoft/vcpkg.git
+C:\src>vcpkg\bootstrap-vcpkg.bat
 ```
 
-* Download the latest [nuget.exe](https://dist.nuget.org/win-x86-commandline/latest/nuget.exe) to a folder that is in your Windows PATH. NuGet is a .NET package manager.
+### 3. Install the required libraries
 
-* Use NuGet to download the latest [libVLC](https://www.videolan.org/vlc/libvlc.html). This library is used to play video snaps.
+This project currently builds as **Win32** and expects the `x86-windows-static-md` triplet.
+
+Install the required packages with vcpkg:
+
+```batchfile
+C:\src>vcpkg\vcpkg install curl:x86-windows-static-md freeimage:x86-windows-static-md freetype:x86-windows-static-md rapidjson:x86-windows-static-md sdl2:x86-windows-static-md
+```
+
+Install libVLC with NuGet:
 
 ```batchfile
 C:\src\EmulationStation>mkdir nuget
@@ -98,86 +117,95 @@ C:\src\EmulationStation>cd nuget
 C:\src\EmulationStation\nuget>nuget install -ExcludeVersion VideoLAN.LibVLC.Windows
 ```
 
-* Use vcpkg to download the latest pre-compiled [cURL](http://curl.haxx.se/download.html). This is a library for transferring data with URLs.
+### 4. Clone EmulationStation
 
 ```batchfile
-c:\src>.\vcpkg\vcpkg install curl:x86-windows-static-md
+C:\src>git clone --recursive https://github.com/ea192000/EmulationStation.git
+C:\src>cd EmulationStation
 ```
 
-* Use vcpkg to download the latest [FreeImage](https://freeimage.sourceforge.io/index.html). This library supports popular graphics image formats.
+If you already cloned the repository without submodules, run:
 
 ```batchfile
-c:\src\>.\vcpkg\vcpkg install freeimage:x86-windows-static-md
+C:\src\EmulationStation>git submodule update --init
 ```
 
-* Use vcpkg to download the latest pre-compiled [FreeType2](https://freetype.org/). This library is used to render fonts.
-
-```batchfile
-c:\src>.\vcpkg\vcpkg install freetype:x86-windows-static-md
-```
-
-* Use vcpkg to download the latest [SDL2](http://www.libsdl.org/). Simple DirectMedia Layer is a cross-platform development library designed to provide low level access to audio, keyboard, mouse, joystick, and graphics hardware via OpenGL and Direct3D.
-
-```batchfile
-c:\src>.\vcpkg\vcpkg install sdl2:x86-windows-static-md
-```
-
-* Use vcpkg to download the latest [RapidJSON](http://rapidjson.org/). This library provides a fast JSON parser/generator for C++ with both SAX/DOM style API.
-
-```batchfile
-c:\src>.\vcpkg\vcpkg install rapidjson:x86-windows-static-md
-```
-
-* Using the example shown below, configure environment variables to point to the libraries that were installed in the above steps. Please note that the below example intentionally uses forward slashes for compatibility with CMake.
-
-```batchfile
-C:\src\EmulationStation>set VCPKG=C:/src/vcpkg/installed/x86-windows-static-md
-C:\src\EmulationStation>set NUGET=C:/src/EmulationStation/nuget
-C:\src\EmulationStation>set FREETYPE_DIR=%VCPKG%
-C:\src\EmulationStation>set FREEIMAGE_HOME=%VCPKG%
-C:\src\EmulationStation>set VLC_HOME=%NUGET%/VideoLAN.LibVLC.Windows/build/x86
-C:\src\EmulationStation>set RAPIDJSON_INCLUDE_DIRS=%VCPKG%/include
-C:\src\EmulationStation>set CURL_INCLUDE_DIR=%VCPKG%/include
-C:\src\EmulationStation>set SDL2_INCLUDE_DIR=%VCPKG%/include/SDL2
-C:\src\EmulationStation>set VLC_INCLUDE_DIR=%VLC_HOME%/include
-C:\src\EmulationStation>set CURL_LIBRARY=%VCPKG%/lib/*.lib
-C:\src\EmulationStation>set SDL2_LIBRARY=%VCPKG%/lib/manual-link/SDL2main.lib
-C:\src\EmulationStation>set VLC_LIBRARIES=%VLC_HOME%/libvlc*.lib
-C:\src\EmulationStation>set VLC_VERSION=3.0.11
-```
-
-* Use CMake to generate the Visual Studio project.
+### 5. Create the build directory
 
 ```batchfile
 C:\src\EmulationStation>mkdir build
-C:\src\EmulationStation>cmake . -B build -A Win32 ^
--DRAPIDJSON_INCLUDE_DIRS=%RAPIDJSON_INCLUDE_DIRS% ^
--DCURL_INCLUDE_DIR=%CURL_INCLUDE_DIR% ^
--DSDL2_INCLUDE_DIR=%SDL2_INCLUDE_DIR% ^
--DVLC_INCLUDE_DIR=%VLC_INCLUDE_DIR% ^
--DCURL_LIBRARY=%CURL_LIBRARY% ^
--DSDL2_LIBRARY=%SDL2_LIBRARY% ^
--DVLC_LIBRARIES=%VLC_LIBRARIES% ^
--DVLC_VERSION=%VLC_VERSION% ^
+```
+
+### 6. Configure the project with CMake
+
+Before running CMake, adjust the paths in the example below so they match where you installed vcpkg and NuGet.
+
+Important notes:
+
+* Use the **CMake installed with Windows/Visual Studio or Kitware CMake**, not a Unix/MSYS2/DevkitPro CMake that may appear first in `PATH`.
+* This project must be generated for **Win32**.
+* `SDL2_LIBRARY` must point to `SDL2-static.lib`.
+* `SDL2MAIN_LIBRARY` must point to `manual-link\SDL2main.lib`.
+* `CMAKE_TOOLCHAIN_FILE` must point to the vcpkg toolchain so transitive dependencies are linked correctly.
+
+Example:
+
+```batchfile
+C:\src\EmulationStation>"C:\Program Files\CMake\bin\cmake.exe" . -B build -A Win32 ^
+-DCMAKE_TOOLCHAIN_FILE=C:\src\vcpkg\scripts\buildsystems\vcpkg.cmake ^
+-DVCPKG_TARGET_TRIPLET=x86-windows-static-md ^
+-DRAPIDJSON_INCLUDE_DIRS=C:\src\vcpkg\installed\x86-windows-static-md\include ^
+-DCURL_INCLUDE_DIR=C:\src\vcpkg\installed\x86-windows-static-md\include ^
+-DSDL2_INCLUDE_DIR=C:\src\vcpkg\installed\x86-windows-static-md\include\SDL2 ^
+-DVLC_INCLUDE_DIR=C:\src\EmulationStation\nuget\VideoLAN.LibVLC.Windows\build\x86\include ^
+-DCURL_LIBRARY=C:\src\vcpkg\installed\x86-windows-static-md\lib\libcurl.lib ^
+-DSDL2_LIBRARY=C:\src\vcpkg\installed\x86-windows-static-md\lib\SDL2-static.lib ^
+-DSDL2MAIN_LIBRARY=C:\src\vcpkg\installed\x86-windows-static-md\lib\manual-link\SDL2main.lib ^
+-DVLC_LIBRARIES=C:\src\EmulationStation\nuget\VideoLAN.LibVLC.Windows\build\x86\libvlc.lib ^
+-DVLC_VERSION=3.0.20 ^
 -DCMAKE_EXE_LINKER_FLAGS=/SAFESEH:NO
 ```
 
-* Use CMake to build the Visual Studio project.
+### 7. Build the project
 
 ```batchfile
-C:\src\EmulationStation>cmake --build build --config Release
+C:\src\EmulationStation>"C:\Program Files\CMake\bin\cmake.exe" --build build --config Release
 ```
 
-* Using the example shown below, copy the newly built binaries and other needed files to destination folder.
+If the build succeeds, the executable will be created here:
 
 ```batchfile
-C:\src\EmulationStation>mkdir -p C:\apps\EmulationStation\.emulationstation
-C:\src\EmulationStation>xcopy C:\src\EmulationStation\resources C:\apps\EmulationStation\resources /h /i /c /k /e /r /y
-C:\src\EmulationStation>copy C:\src\EmulationStation\Release\*.exe C:\apps\EmulationStation /Y
-C:\src\EmulationStation>copy C:\src\EmulationStation\nuget\VideoLAN.LibVLC.Windows\build\x86\*.dll C:\apps\EmulationStation /Y
-C:\src\EmulationStation>xcopy C:\src\EmulationStation\nuget\VideoLAN.LibVLC.Windows\build\x86\plugins C:\apps\EmulationStation\plugins /h /i /c /k /e /r /y
-
+C:\src\EmulationStation\Release\emulationstation.exe
 ```
+
+### 8. Copy the runtime files
+
+Copy the executable, resources and libVLC runtime files to your destination folder.
+
+Example:
+
+```batchfile
+C:\src\EmulationStation>mkdir C:\apps\EmulationStation
+C:\src\EmulationStation>mkdir C:\apps\EmulationStation\.emulationstation
+C:\src\EmulationStation>xcopy resources C:\apps\EmulationStation\resources /h /i /c /k /e /r /y
+C:\src\EmulationStation>copy Release\*.exe C:\apps\EmulationStation /Y
+C:\src\EmulationStation>copy nuget\VideoLAN.LibVLC.Windows\build\x86\*.dll C:\apps\EmulationStation /Y
+C:\src\EmulationStation>xcopy nuget\VideoLAN.LibVLC.Windows\build\x86\plugins C:\apps\EmulationStation\plugins /h /i /c /k /e /r /y
+```
+
+### Common problems
+
+* **CMake says `Unix Makefiles does not support platform specification`**
+  You are probably running an MSYS2/Unix CMake instead of the Windows one. Use the full path to `cmake.exe` from Kitware or Visual Studio.
+
+* **`SDL.h` or `SDL_joystick.h` cannot be found**
+  Check that `SDL2_INCLUDE_DIR` points to the `include\SDL2` folder inside the `x86-windows-static-md` triplet.
+
+* **Linker errors related to FreeImage, TIFF, OpenEXR or similar libraries**
+  Make sure you configured with `-DCMAKE_TOOLCHAIN_FILE=...\vcpkg.cmake` and `-DVCPKG_TARGET_TRIPLET=x86-windows-static-md`.
+
+* **The generated Visual Studio solution opens but IntelliSense still shows stale errors**
+  Reload the solution or regenerate CMake again after fixing the paths.
 
 
 Configuring
@@ -252,7 +280,7 @@ All systems must be contained within the <systemList> tag.-->
 		<command>snesemulator %ROM%</command>
 		<!-- This example would run the bash command "snesemulator /home/user/roms/snes/Super\ Mario\ World.sfc". -->
 
-		<!-- The platform(s) to use when scraping. You can see the full list of accepted platforms in src/PlatformIds.cpp.
+		<!-- The platform(s) to use when scraping. You can see the current list of accepted platforms in SYSTEMS.md and in es-app/src/PlatformId.cpp.
 		It's case sensitive, but everything is lowercase. This tag is optional.
 		You can use multiple platforms too, delimited with any of the whitespace characters (", \r\n\t"), eg: "genesis, megadrive" -->
 		<platform>snes</platform>
@@ -288,7 +316,7 @@ If at least one game in a system has an image specified, ES will use the detaile
 
 You can also edit metadata within ES by using the metadata editor - just find the game you wish to edit on the gamelist, press Select, and choose "EDIT THIS GAME'S METADATA."
 
-A command-line version of the scraper is also provided - just run emulationstation with `--scrape` *(currently broken)*.
+A command-line version of the scraper is also present in the source tree, but it is currently incomplete and should not be relied on as a supported workflow.
 
 The switch `--ignore-gamelist` can be used to ignore the gamelist and force ES to use the non-detailed view.
 
@@ -302,9 +330,4 @@ By default, EmulationStation looks pretty ugly. You can fix that. If you want to
 
 I've put some themes up for download on my EmulationStation webpage: http://aloshi.com/emulationstation#themes
 
-If you're using RetroPie, you should already have a nice set of themes automatically installed!
-
-
--Alec "Aloshi" Lofquist
-http://www.aloshi.com
-http://www.emulationstation.org
+See [THEMES.md](THEMES.md) for the current theme reference used by this fork.

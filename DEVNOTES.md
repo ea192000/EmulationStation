@@ -41,5 +41,5 @@ Creating a new Component
 
 If your component is not made up of other components, and you draw something to the screen with OpenGL, make sure:
 
-* Your vertex positions are rounded before you render (you can use round(float) in Util.h to do this).
-* Your transform matrix's translation is rounded (you can use roundMatrix(affine3f) in Util.h to do this).
+* Your vertex positions are rounded before you render (for example with `Math::round(...)`).
+* Your transform matrix's translation is rounded before rendering (for example with `Transform4x4f::round()`).
